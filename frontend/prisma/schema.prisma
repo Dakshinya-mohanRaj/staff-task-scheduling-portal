@@ -12,12 +12,17 @@ datasource db {
 
 // ============ Enums ============
 
-// Staff job role / skill used ONLY for work-order matching.
-// Distinct from the application role (stored in the "roles" table).
+// College faculty/staff responsibility used ONLY for work-order matching.
+// Distinct from the application role (stored in the "roles" table: ADMIN / STAFF).
 enum StaffRole {
-  CLEANER
-  TECHNICIAN
-  GUARD
+  FACULTY
+  PLACEMENT_COORDINATOR
+  TRAINING_COORDINATOR
+  PROGRAM_COORDINATOR
+  ACADEMIC_COORDINATOR
+  STUDENT_ACTIVITY_COORDINATOR
+  MAINTENANCE_COORDINATOR
+  DOCUMENTATION_COORDINATOR
 }
 
 enum Priority {
