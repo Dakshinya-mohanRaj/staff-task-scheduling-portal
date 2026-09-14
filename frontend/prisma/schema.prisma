@@ -1,0 +1,153 @@
+// Staff Task Scheduling & Monitoring Portal - Prisma schema
+// Models follow docs/database-design.md (source of truth).
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============ Enums ============
+
+// Staff job role / skill used ONLY for work-order matching.
+// Distinct from the application role (stored in the "roles" table).
+enum StaffRole {
+  CLEANER
+  TECHNICIAN
+  GUARD
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+// Lifecycle of a work order record itself.
+enum WorkOrderStatus {
+  ASSIGNED
+  CANCELLED
+}
+
+// Lifecycle of an assignment (the "task" staff execute).
+// OVERDUE is primarily derived at query time (see database-design.md §6.3);
+// it is included here so the enum can express the state explicitly.
+enum AssignmentStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  OVERDUE
+}
+
+// ============ Models ============
+
+// Fixed list of application roles for role-based access control.
+model Role {
+  id          String   @id @default(uuid()) @db.Uuid
+  code        String   @unique @db.VarChar(20)
+  name        String   @db.VarChar(50)
+  description String?  @db.VarChar(255)
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  users User[]
+
+  @@map("roles")
+}
+
+// All people who can log in — admins and staff.
+model User {
+  id           String     @id @default(uuid()) @db.Uuid
+  firstName    String     @map("first_name") @db.VarChar(100)
+  lastName     String     @map("last_name") @db.VarChar(100)
+  email        String     @unique @db.VarChar(255)
+  passwordHash String     @map("password_hash") @db.VarChar(255)
+  roleId       String     @map("role_id") @db.Uuid
+  role         Role       @relation(fields: [roleId], references: [id])
+  staffRole    StaffRole? @map("staff_role")
+  isActive     Boolean    @default(true) @map("is_active")
+  createdAt    DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime   @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  createdWorkOrders    WorkOrder[]         @relation("WorkOrderCreatedBy")
+  assignedTasks        TaskAssignment[]    @relation("TaskAssignedTo")
+  assignedByTasks      TaskAssignment[]    @relation("TaskAssignedBy")
+  statusHistoryChanges TaskStatusHistory[] @relation("StatusChangedBy")
+
+  @@index([roleId])
+  @@index([staffRole])
+  @@index([isActive])
+  @@map("users")
+}
+
+// A unit of planned work created by an admin.
+model WorkOrder {
+  id                String          @id @default(uuid()) @db.Uuid
+  woNumber          String          @unique @map("wo_number") @db.VarChar(30)
+  title             String          @db.VarChar(200)
+  description       String          @db.Text
+  requiredStaffRole StaffRole       @map("required_staff_role")
+  priority          Priority        @default(MEDIUM)
+  scheduledDate     DateTime        @db.Date @map("scheduled_date")
+  startTime         DateTime        @db.Time(6) @map("start_time")
+  endTime           DateTime        @db.Time(6) @map("end_time")
+  status            WorkOrderStatus @default(ASSIGNED)
+  createdById       String          @map("created_by") @db.Uuid
+  createdBy         User            @relation("WorkOrderCreatedBy", fields: [createdById], references: [id])
+  createdAt         DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime        @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  assignment TaskAssignment?
+
+  @@index([requiredStaffRole])
+  @@index([scheduledDate])
+  @@index([status])
+  @@index([createdById])
+  @@map("work_orders")
+}
+
+// Assignment of a work order to a staff member — the "task" staff execute.
+model TaskAssignment {
+  id                 String           @id @default(uuid()) @db.Uuid
+  workOrderId        String           @unique @map("work_order_id") @db.Uuid
+  workOrder          WorkOrder        @relation(fields: [workOrderId], references: [id])
+  assignedToId       String           @map("assigned_to_id") @db.Uuid
+  assignedTo         User             @relation("TaskAssignedTo", fields: [assignedToId], references: [id])
+  assignedById       String           @map("assigned_by_id") @db.Uuid
+  assignedBy         User             @relation("TaskAssignedBy", fields: [assignedById], references: [id])
+  scheduledDate      DateTime         @db.Date @map("scheduled_date")
+  startTime          DateTime         @db.Time(6) @map("start_time")
+  endTime            DateTime         @db.Time(6) @map("end_time")
+  status             AssignmentStatus @default(SCHEDULED)
+  startedAt          DateTime?        @map("started_at") @db.Timestamptz(6)
+  completedAt        DateTime?        @map("completed_at") @db.Timestamptz(6)
+  cancelledAt        DateTime?        @map("cancelled_at") @db.Timestamptz(6)
+  cancellationReason String?          @map("cancellation_reason") @db.VarChar(500)
+  createdAt          DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime         @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  statusHistory TaskStatusHistory[]
+
+  @@index([assignedToId, scheduledDate, startTime])
+  @@index([status])
+  @@map("task_assignments")
+}
+
+// Append-only audit trail of status transitions for an assignment.
+model TaskStatusHistory {
+  id               String            @id @default(uuid()) @db.Uuid
+  taskAssignmentId String            @map("task_assignment_id") @db.Uuid
+  taskAssignment   TaskAssignment    @relation(fields: [taskAssignmentId], references: [id])
+  previousStatus   AssignmentStatus? @map("previous_status")
+  newStatus        AssignmentStatus  @map("new_status")
+  changedById      String            @map("changed_by_id") @db.Uuid
+  changedBy        User              @relation("StatusChangedBy", fields: [changedById], references: [id])
+  changedAt        DateTime          @default(now()) @map("changed_at") @db.Timestamptz(6)
+  remark           String?           @db.VarChar(1000)
+
+  @@index([taskAssignmentId, changedAt])
+  @@map("task_status_history")
+}
