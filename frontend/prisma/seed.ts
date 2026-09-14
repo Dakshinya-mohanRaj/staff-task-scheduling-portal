@@ -55,7 +55,10 @@ async function main() {
   const staffRole = await prisma.role.findUniqueOrThrow({ where: { code: "STAFF" } });
 
   // -------- Users --------
-  const users = new Map<string, { id: string }>();
+  const users = new Map<
+    string,
+    { id: string; firstName: string; lastName: string }
+  >();
 
   const userSpecs: Array<{
     key: string;
@@ -102,7 +105,7 @@ async function main() {
   }
 
   const hod = users.get("hod")!;
-  const admin = users.get("admin")!;
+  void users.get("admin");
 
   // -------- Work Orders --------
   type WorkOrderSpec = {
