@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { requireAuth } from "@/lib/dal";
 import { getTaskById } from "@/lib/services/tasks";
+import { NotFoundError } from "@/lib/errors";
 import { handleRouteError, jsonSuccess } from "@/lib/api-helpers";
 
 export async function GET(
@@ -15,7 +16,7 @@ export async function GET(
       session.roleCode === "STAFF" &&
       task.assignedToId !== session.userId
     ) {
-      return handleRouteError(new Error("Not found"));
+      throw new NotFoundError("Task not found");
     }
     return jsonSuccess(task);
   } catch (error) {

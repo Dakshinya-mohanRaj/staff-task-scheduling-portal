@@ -4,7 +4,7 @@ import { cache } from "react";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth/session";
-import { UnauthorizedError } from "@/lib/errors";
+import { UnauthorizedError, ForbiddenError } from "@/lib/errors";
 import type { StaffRole } from "@/lib/generated/prisma/client";
 
 export interface AuthSession {
@@ -30,14 +30,14 @@ export async function requireAuth(): Promise<AuthSession> {
 export async function requireAdmin(): Promise<AuthSession> {
   const session = await requireAuth();
   if (session.roleCode !== "ADMIN")
-    throw new UnauthorizedError("Admin access required");
+    throw new ForbiddenError("Admin access required");
   return session;
 }
 
 export async function requireStaff(): Promise<AuthSession> {
   const session = await requireAuth();
   if (session.roleCode !== "STAFF")
-    throw new UnauthorizedError("Staff access required");
+    throw new ForbiddenError("Staff access required");
   return session;
 }
 

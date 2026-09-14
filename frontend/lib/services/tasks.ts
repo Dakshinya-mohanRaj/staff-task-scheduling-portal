@@ -89,7 +89,7 @@ export async function startTask(taskAssignmentId: string, userId: string) {
 
   const now = new Date();
 
-  return prisma.$transaction(async (tx) => {
+  await prisma.$transaction(async (tx) => {
     await tx.taskAssignment.update({
       where: { id: taskAssignmentId },
       data: {
@@ -107,9 +107,9 @@ export async function startTask(taskAssignmentId: string, userId: string) {
         changedAt: now,
       },
     });
-
-    return getTaskById(taskAssignmentId);
   });
+
+  return getTaskById(taskAssignmentId);
 }
 
 export async function completeTask(taskAssignmentId: string, userId: string, remark?: string) {
@@ -124,7 +124,7 @@ export async function completeTask(taskAssignmentId: string, userId: string, rem
 
   const now = new Date();
 
-  return prisma.$transaction(async (tx) => {
+  await prisma.$transaction(async (tx) => {
     await tx.taskAssignment.update({
       where: { id: taskAssignmentId },
       data: {
@@ -143,9 +143,9 @@ export async function completeTask(taskAssignmentId: string, userId: string, rem
         remark: remark || null,
       },
     });
-
-    return getTaskById(taskAssignmentId);
   });
+
+  return getTaskById(taskAssignmentId);
 }
 
 export async function addRemark(taskAssignmentId: string, userId: string, text: string) {

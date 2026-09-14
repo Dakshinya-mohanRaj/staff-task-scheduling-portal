@@ -10,6 +10,10 @@ export const prisma =
     adapter: new PrismaPg({
       connectionString: process.env["DATABASE_URL"],
     }),
+    transactionOptions: {
+      timeout: 20000,
+      maxWait: 20000,
+    },
   });
 
 if (process.env["NODE_ENV"] !== "production") {
