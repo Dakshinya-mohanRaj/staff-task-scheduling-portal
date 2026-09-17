@@ -2,7 +2,7 @@
 
 ## 1. Project Overview
 
-The Staff Task Scheduling & Monitoring Portal is a web-based application designed to streamline the process of creating, assigning, and tracking work orders within an organization. Administrators can create work orders, match them to suitable staff based on role and availability, and monitor progress in real time. Staff members can view their assigned tasks, update task status, and add remarks throughout the workday.
+The Staff Task Scheduling & Monitoring Portal is a web-based application designed to streamline the process of creating, assigning, and tracking work orders within a college. The HOD creates work orders, matches them to suitable faculty/coordinators based on responsibility and availability, and monitors progress in real time. Staff members can view their assigned tasks, update task status, and add remarks throughout the workday.
 
 This document outlines the requirements for a Proof of Concept (POC) build with a realistic scope for a 2-3 day development timeline.
 
@@ -14,7 +14,7 @@ Organizations that rely on manual or fragmented methods to assign and track staf
 - **No centralized system** for creating and distributing work orders to the right personnel.
 - **Difficulty matching** task requirements to staff with appropriate roles and availability.
 - **No real-time tracking** of task progress from assignment through completion.
-- **Inefficient communication** between administrators and field/staff workers regarding task status.
+- **Inefficient communication** between the HOD and staff regarding task status.
 
 A lightweight scheduling portal addresses these gaps by providing a single platform for task lifecycle management.
 
@@ -22,8 +22,8 @@ A lightweight scheduling portal addresses these gaps by providing a single platf
 
 The objective of this POC is to demonstrate the core workflow of:
 
-1. Role-based authentication (Admin vs Staff).
-2. Admin-driven work order creation with role matching and availability checking.
+1. Role-based authentication (HOD vs Staff).
+2. HOD-driven work order creation with responsibility matching and availability checking.
 3. Day-based task assignment and scheduling.
 4. Staff-driven task execution and status updates.
 5. Basic monitoring and dashboard statistics.
@@ -34,7 +34,7 @@ The POC validates that the concept is viable and provides a foundation for futur
 
 The application supports two roles. Each role has a distinct set of permissions and a dedicated workflow.
 
-### 4.1 ADMIN
+### 4.1 HOD
 
 - Full access to work order creation, assignment, and monitoring.
 - Can view dashboards with aggregate task and staffing statistics.
@@ -46,19 +46,19 @@ The application supports two roles. Each role has a distinct set of permissions 
 - Can view tasks assigned to them for the current day.
 - Can view task details, start a task, add remarks, and mark tasks as completed.
 - Cannot create or assign work orders.
-- Cannot view other users' tasks or dashboards with admin-level statistics.
+- Cannot view other users' tasks or dashboards with HOD-level statistics.
 
-## 5. Admin Functional Requirements
+## 5. HOD Functional Requirements
 
 | ID | Requirement | Description |
 |----|-------------|-------------|
-| AF-01 | Login | Admin authenticates using email and password. Upon successful login, redirected to the admin dashboard. |
-| AF-02 | View Dashboard | Admin sees a summary view including total work orders, tasks by status (Scheduled, In Progress, Completed), and staff availability for the current day. |
-| AF-03 | Create Work Order | Admin can create a new work order by providing a title, description, required staff role, priority level, date, start time, and end time. |
-| AF-04 | View Suitable Users | After filling in work order details (role, date, time), the system displays a list of staff members who match the required role and are available during the specified time window. |
-| AF-05 | Assign Work Order | Admin selects a suitable user from the list and assigns the work order to them. The task is created with a status of SCHEDULED. |
-| AF-06 | View Assigned Tasks | Admin can view a list of all work orders and their current assignment status, filterable by date. |
-| AF-07 | Monitor Task Status | Admin can see the real-time status of each assigned task (SCHEDULED, IN_PROGRESS, or COMPLETED) from the assigned tasks view. |
+| AF-01 | Login | The HOD authenticates using email and password. Upon successful login, redirected to the HOD dashboard. |
+| AF-02 | View Dashboard | The HOD sees a summary view including total work orders, tasks by status (Scheduled, In Progress, Completed), and staff availability for the current day. |
+| AF-03 | Create Work Order | The HOD can create a new work order by providing a title, description, required staff responsibility, priority level, date, start time, and end time. |
+| AF-04 | View Suitable Users | After filling in work order details (responsibility, date, time), the system displays a list of staff members who match the required responsibility and are available during the specified time window. |
+| AF-05 | Assign Work Order | The HOD selects a suitable user from the list and assigns the work order to them. The task is created with a status of SCHEDULED. |
+| AF-06 | View Assigned Tasks | The HOD can view a list of all work orders and their current assignment status, filterable by date. |
+| AF-07 | Monitor Task Status | The HOD can see the real-time status of each assigned task (SCHEDULED, IN_PROGRESS, or COMPLETED) from the assigned tasks view. |
 
 ## 6. User/Staff Functional Requirements
 
@@ -90,9 +90,9 @@ A work order represents a discrete unit of work that needs to be performed by a 
 
 ### 7.2 Work Order Lifecycle
 
-1. Admin creates a work order.
-2. Admin reviews suitable/available staff.
-3. Admin assigns the work order to a staff member. A task is created with status SCHEDULED.
+1. The HOD creates a work order.
+2. The HOD reviews suitable/available staff.
+3. The HOD assigns the work order to a staff member. A task is created with status SCHEDULED.
 4. The assigned staff member starts and completes the task (see Section 10).
 
 ## 8. Staff Allocation Requirements
@@ -135,7 +135,7 @@ If no suitable staff are available, the system should display an appropriate mes
 
 ### 9.2 Daily Task View
 
-- **Admin View:** The admin can select a date to view all work orders and their statuses for that day, including which staff members are assigned to each task.
+- **HOD View:** The HOD can select a date to view all work orders and their statuses for that day, including which staff members are assigned to each task.
 - **Staff View:** The staff member sees only their own tasks for today. A separate view or toggle for upcoming dates is not required in this POC.
 
 ### 9.3 Time Window Enforcement
@@ -174,9 +174,9 @@ SCHEDULED  -->  IN_PROGRESS  -->  COMPLETED
 
 ## 11. Dashboard Requirements
 
-### 11.1 Admin Dashboard
+### 11.1 HOD Dashboard
 
-The admin dashboard should display the following statistics for the current day (or a selected date):
+The HOD dashboard should display the following statistics for the current day (or a selected date):
 
 - Total work orders for the date.
 - Work orders by status: Scheduled count, In Progress count, Completed count.
@@ -241,13 +241,13 @@ Dashboard statistics should reflect the current state of data. In the POC, page 
 
 The POC is considered successful if the following end-to-end workflows can be demonstrated:
 
-1. **Admin Login:** An admin user can log in and is redirected to the admin dashboard.
+1. **HOD Login:** The HOD can log in and is redirected to the HOD dashboard.
 2. **Staff Login:** A staff user can log in and is redirected to the staff dashboard.
-3. **Work Order Creation:** An admin can create a work order with all required fields.
-4. **Staff Matching:** The system correctly shows available staff based on role and availability.
-5. **Task Assignment:** An admin can assign a work order to an available staff member. The task appears as SCHEDULED on the staff member's dashboard.
+3. **Work Order Creation:** The HOD can create a work order with all required fields.
+4. **Staff Matching:** The system correctly shows available staff based on responsibility and availability.
+5. **Task Assignment:** The HOD can assign a work order to an available staff member. The task appears as SCHEDULED on the staff member's dashboard.
 6. **Task Execution:** The assigned staff member can view the task, start it (IN_PROGRESS), add remarks, and mark it as completed (COMPLETED).
-7. **Status Monitoring:** The admin can monitor the task status transition from SCHEDULED to IN_PROGRESS to COMPLETED.
+7. **Status Monitoring:** The HOD can monitor the task status transition from SCHEDULED to IN_PROGRESS to COMPLETED.
 8. **Availability Constraint:** The system prevents assigning overlapping tasks to the same staff member.
 9. **Validation:** The system enforces required fields and shows appropriate error messages for invalid input.
 10. **Dashboard Statistics:** Both dashboards display accurate summary statistics.

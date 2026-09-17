@@ -1,12 +1,12 @@
 import { NextRequest } from "next/server";
-import { requireAdmin } from "@/lib/dal";
+import { requireHod } from "@/lib/dal";
 import { findAvailableStaff } from "@/lib/services/work-orders";
 import { suitableStaffSchema } from "@/lib/validations";
 import { handleRouteError, jsonError, jsonSuccess } from "@/lib/api-helpers";
 
 export async function POST(request: NextRequest) {
   try {
-    await requireAdmin();
+    await requireHod();
     const body = await request.json();
     const parsed = suitableStaffSchema.safeParse(body);
     if (!parsed.success) {

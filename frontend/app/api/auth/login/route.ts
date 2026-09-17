@@ -31,13 +31,20 @@ export async function POST(request: NextRequest) {
       return jsonError("Invalid credentials", 401);
     }
 
-    await createSession({
-      userId: user.id,
-      email: user.email,
-      roleCode: user.role.code as "ADMIN" | "STAFF",
-      staffRole: user.staffRole ?? null,
-      name: `${user.firstName} ${user.lastName}`,
-    });
+    const isHttps =
+      request.headers.get("x-forwarded-proto") === "https" ||
+      request.nextUrl.protocol === "https:";
+
+    await createSession(
+      {
+        userId: user.id,
+        email: user.email,
+        roleCode: user.role.code as "ADMIN" | "STAFF",
+        staffRole: user.staffRole ?? null,
+        name: `${user.firstName} ${user.lastName}`,
+      },
+      { secure: isHttps },
+    );
 
     return jsonSuccess({
       id: user.id,

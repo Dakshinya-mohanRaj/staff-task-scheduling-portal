@@ -98,7 +98,7 @@ export function DashboardShell({ children, user }: DashboardShellProps) {
                 Staff Task Portal
               </h1>
               <span className="text-[10px] font-medium text-blue-600 uppercase tracking-wide">
-                {isAdmin ? "Administrator" : "Staff"}
+                {isAdmin ? "HOD" : "Staff"}
               </span>
             </div>
           </Link>

@@ -114,11 +114,6 @@ export function LoginForm() {
               <br />
               <span className="break-all">hod@college.edu</span>
             </div>
-            <div className="rounded bg-gray-50 p-2 text-center">
-              <span className="font-semibold text-gray-800">Admin</span>
-              <br />
-              <span className="break-all">admin@college.edu</span>
-            </div>
             <div className="rounded bg-gray-50 p-2 text-center col-span-2">
               <span className="font-semibold text-gray-800">All Staff</span>
               <br />

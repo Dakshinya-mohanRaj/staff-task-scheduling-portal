@@ -51,7 +51,7 @@ export async function getTaskById(taskAssignmentId: string) {
     include: {
       workOrder: true,
       assignedTo: true,
-      assignedBy: true,
+      assignedBy: { include: { role: { select: { code: true } } } },
       statusHistory: {
         include: { changedBy: true },
         orderBy: { changedAt: "asc" },

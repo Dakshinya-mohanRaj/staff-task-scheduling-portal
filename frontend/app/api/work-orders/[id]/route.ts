@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { requireAdmin } from "@/lib/dal";
+import { requireHod } from "@/lib/dal";
 import { getWorkOrderById } from "@/lib/services/work-orders";
 import { handleRouteError, jsonSuccess } from "@/lib/api-helpers";
 
@@ -8,7 +8,7 @@ export async function GET(
   context: { params: Promise<{ id: string }> },
 ) {
   try {
-    await requireAdmin();
+    await requireHod();
     const { id } = await context.params;
     const wo = await getWorkOrderById(id);
     return jsonSuccess(wo);

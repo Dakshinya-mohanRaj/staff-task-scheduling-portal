@@ -27,10 +27,10 @@ export async function requireAuth(): Promise<AuthSession> {
   return session;
 }
 
-export async function requireAdmin(): Promise<AuthSession> {
+export async function requireHod(): Promise<AuthSession> {
   const session = await requireAuth();
   if (session.roleCode !== "ADMIN")
-    throw new ForbiddenError("Admin access required");
+    throw new ForbiddenError("HOD access required");
   return session;
 }
 

@@ -120,7 +120,7 @@ app/
 ├── (dashboard)/
 │   ├── layout.tsx                  # Dashboard layout (sidebar, nav)
 │   ├── admin/
-│   │   ├── page.tsx                # Admin dashboard
+│   │   ├── page.tsx                # HOD dashboard (internal role: ADMIN)
 │   │   ├── work-orders/
 │   │   │   ├── new/page.tsx        # Create work order
 │   │   │   ├── [id]/page.tsx       # Work order details
@@ -317,7 +317,7 @@ services/
 | POST | `/api/tasks/[id]/complete` | STAFF | Transition task to COMPLETED |
 | GET | `/api/tasks/[id]/remarks` | Any | List remarks for a task |
 | POST | `/api/tasks/[id]/remarks` | STAFF | Add a remark to a task |
-| GET | `/api/dashboard/admin` | ADMIN | Admin dashboard statistics |
+| GET | `/api/dashboard/admin` | ADMIN | HOD dashboard statistics (internal role: ADMIN) |
 | GET | `/api/dashboard/staff` | STAFF | Staff dashboard statistics |
 
 ### 5.4 Response Format
@@ -849,7 +849,7 @@ POST /api/tasks/[id]/remarks
 ### 13.3 Dashboard Statistics
 
 ```
-Admin Dashboard for date D:
+HOD Dashboard for date D:
   - Total work orders on date D
   - SCHEDULED count
   - IN_PROGRESS count
@@ -1156,7 +1156,7 @@ staff-task-scheduling-portal/
 |--------|-----------|---------------|
 | **Dev 1** | Backend / API | Prisma schema, migrations, seed data, API route handlers, service layer |
 | **Dev 2** | Auth / Infra | Authentication flow, session management, middleware, project setup, `.env` config |
-| **Dev 3** | Admin UI | Admin pages, work order forms, staff selection, task monitor, dashboard stats |
+| **Dev 3** | HOD UI | HOD pages, work order forms, staff selection, task monitor, dashboard stats |
 | **Dev 4** | Staff UI | Staff pages, today's tasks, task details, start/complete flow, remarks |
 
 ### 19.2 Development Timeline

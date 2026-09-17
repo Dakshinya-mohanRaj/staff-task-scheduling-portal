@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { requireAdmin } from "@/lib/dal";
+import { requireHod } from "@/lib/dal";
 import {
   listWorkOrders,
   createWorkOrder,
@@ -9,7 +9,7 @@ import { handleRouteError, jsonError, jsonSuccess } from "@/lib/api-helpers";
 
 export async function GET(request: NextRequest) {
   try {
-    await requireAdmin();
+await requireHod();
     const { searchParams } = request.nextUrl;
     const date = searchParams.get("date") ?? undefined;
     const status = searchParams.get("status") ?? undefined;
@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await requireAdmin();
+    const session = await requireHod();
     const body = await request.json();
     const parsed = createWorkOrderSchema.safeParse(body);
     if (!parsed.success) {

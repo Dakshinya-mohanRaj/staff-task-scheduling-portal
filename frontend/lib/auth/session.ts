@@ -60,12 +60,17 @@ export async function verifySessionToken(
   }
 }
 
-export async function createSession(payload: SessionPayload) {
+export async function createSession(
+  payload: SessionPayload,
+  options: { secure?: boolean } = {},
+) {
   const token = await signSession(payload);
   const cookieStore = await cookies();
   cookieStore.set(SESSION_COOKIE, token, {
     httpOnly: true,
-    secure: process.env["NODE_ENV"] === "production",
+    secure:
+      options.secure ??
+      process.env["NODE_ENV"] === "production",
     sameSite: "lax",
     path: "/",
     maxAge: MAX_AGE_MS / 1000,
