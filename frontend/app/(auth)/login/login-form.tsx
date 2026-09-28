@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { ParticleText } from "./particle-text";
 
 export function LoginForm() {
   const router = useRouter();
@@ -45,8 +46,12 @@ export function LoginForm() {
   return (
     <div className="w-full max-w-sm">
       <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
-        <h1 className="text-2xl font-bold text-gray-900 text-center mb-1">
-          Staff Task Scheduling Portal
+        <h1 className="text-2xl font-bold text-gray-900 text-center mb-1 leading-relaxed">
+          <ParticleText
+            text="Staff Task Scheduling Portal"
+            className="font-bold text-2xl"
+            delayMs={45}
+          />
         </h1>
         <p className="text-sm text-gray-500 text-center mb-6">
           Sign in to your account
@@ -103,24 +108,6 @@ export function LoginForm() {
             {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
-
-        <div className="mt-4 border-t border-gray-100 pt-4">
-          <p className="text-xs text-gray-500 text-center font-medium mb-2">
-            Demo Accounts
-          </p>
-          <div className="grid grid-cols-2 gap-2 text-xs text-gray-600">
-            <div className="rounded bg-gray-50 p-2 text-center">
-              <span className="font-semibold text-gray-800">HOD</span>
-              <br />
-              <span className="break-all">hod@college.edu</span>
-            </div>
-            <div className="rounded bg-gray-50 p-2 text-center col-span-2">
-              <span className="font-semibold text-gray-800">All Staff</span>
-              <br />
-              <span className="text-gray-500">password: password123</span>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );
