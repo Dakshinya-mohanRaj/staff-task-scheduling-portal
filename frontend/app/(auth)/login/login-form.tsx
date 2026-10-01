@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { ParticleText } from "./particle-text";
 
 export function LoginForm() {
   const router = useRouter();
@@ -47,11 +46,7 @@ export function LoginForm() {
     <div className="w-full max-w-sm">
       <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
         <h1 className="text-2xl font-bold text-gray-900 text-center mb-1 leading-relaxed">
-          <ParticleText
-            text="Staff Task Scheduling Portal"
-            className="font-bold text-2xl"
-            delayMs={45}
-          />
+          Staff Task Scheduling Portal
         </h1>
         <p className="text-sm text-gray-500 text-center mb-6">
           Sign in to your account
